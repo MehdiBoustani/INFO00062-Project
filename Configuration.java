@@ -1,10 +1,12 @@
+import java.lang.Math;
+
 public class Configuration {
 
     private String input;
 
     Configuration(String[] args){
         if(args.length != 1){
-            throw new IllegalArgumentException("Exactly one argument expected");
+            throw new IllegalArgumentException("Invalid input data");
         }
         
         input = args[0];
@@ -12,15 +14,20 @@ public class Configuration {
     }
 
     private void checkString(){
-        if(input == null || input.isEmpty()){
-            throw new IllegalArgumentException("Exactly one argument expected");
+
+        double n = Math.cbrt(input.length());
+        int count = 0;
+        
+        for(int i = 0; i < input.length(); i++){
+            if(input.charAt(i) == 'E'){
+                count++;
+            }
         }
-        else if(!input.matches("^[EAS]+$")){
-            throw new IllegalArgumentException("Invalid characters detected. Only use 'E', 'A', or 'S'.");
+
+        if(input == null || input.isEmpty() || (!input.matches("^[EAS]+$")) || (count != 2 || input.charAt(0) != 'E' || input.charAt(input.length() - 1) != 'E') || Math.floor(n) != n){
+            throw new IllegalArgumentException("Invalid input data");
         }
-        else if(input.charAt(0) != 'E' || input.charAt(input.length() - 1) != 'E'){
-            throw new IllegalArgumentException("Your configuration should start and end with an Endpoint : 'E'");
-        }
+        
     }
 
     
