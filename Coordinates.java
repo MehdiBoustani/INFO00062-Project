@@ -1,13 +1,3 @@
-/*
- * INFO0062 - Object-Oriented Programming
- * Code adopted from Exercise series 3
- *
- * This Coordinates class involved in all exercises of this series and isn't supposed to be 
- * edited.
- *
- * @author: J.-F. Grailet
- */
-
 public class Coordinates
 {
     private int x, y, z;
