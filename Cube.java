@@ -3,23 +3,21 @@ import java.util.Vector;
 public class Cube {
     private static int size; // final keyword? 
     private static int cubesCount = 0;
+
+    // A list to store the coordinates of visited (filled) cubes
+    private static List<Coordinates> filledCoordinates = new ArrayList<>();
+
     private Coordinates pos;
     private Cube previous;
-    private Cube next;
 
-    public Cube(Coordinates c, Cube p, Cube n){
+    public Cube(Coordinates c, Cube p){
         pos = c;
         previous = p;
-        next = n;
         cubesCount++;
     }
 
 
 // GETTERS 
-    public Coordinates getPos(){
-        return pos;
-    }
-
     public int getCubesCount(){
         return cubesCount;
     }
@@ -27,10 +25,19 @@ public class Cube {
     public int getSize(){
         return size;
     }
-
-    public int cubesCount(){
-        return cubesCount;
+    public List<Coordinates> getVisited(){
+        return filledCoordinates;
     }
+
+    public Coordinates getPos(){
+        return pos;
+    }
+
+    public Cube getPrevious(){
+        return previous;
+    }
+
+   
 
 
 
