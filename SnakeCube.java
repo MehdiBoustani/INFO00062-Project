@@ -3,9 +3,11 @@
 public class SnakeCube {
     public static void main(String[] args) throws Exception{
         try {
-            Configuration config = new Configuration(args);
+            Configuration snake = new Configuration(args);
         } catch (IllegalArgumentException e) {
-            System.err.println("Configuration error : " + e.getMessage());
+            System.err.println(e.getMessage());
         }
+
+        
     }
 }
