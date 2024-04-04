@@ -21,6 +21,8 @@ public class Configuration {
     private void checkString(){
 
         double n = Math.cbrt(input.length());
+        Cube.setSize((int)(n)); // set Cube size to n
+        
         int count = 0;
         
         for(int i = 0; i < input.length(); i++){
@@ -36,7 +38,6 @@ public class Configuration {
     }
 
     private void convertInput(){
-
         for(int i = 0; i < input.length(); i++){
             switch (input.charAt(i)) {
                 case 'E':
