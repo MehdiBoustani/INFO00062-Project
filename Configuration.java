@@ -5,7 +5,7 @@ import java.util.List;
 public class Configuration {
 
     private String input;
-    private List<Movement> moves = new ArrayList<>();
+    // private List<CubeType> moves = new ArrayList<>();
 
     Configuration(String[] args){
         if(args.length != 1){
@@ -14,7 +14,7 @@ public class Configuration {
         
         input = args[0];
         checkString();
-        convertInput();
+        // convertInput();
         
     }
 
@@ -37,28 +37,28 @@ public class Configuration {
         
     }
 
-    private void convertInput(){
-        for(int i = 0; i < input.length(); i++){
-            switch (input.charAt(i)) {
-                case 'E':
-                    moves.add(Movement.ENDPOINT);
-                    break;
-                case 'A':
-                    moves.add(Movement.ANGLE);
-                    break;
-                case 'S':
-                    moves.add(Movement.STRAIGHT);
-                    break;
+    // private void convertInput(){
+    //     for(int i = 0; i < input.length(); i++){
+    //         switch (input.charAt(i)) {
+    //             case 'E':
+    //                 moves.add(CubeType.ENDPOINT);
+    //                 break;
+    //             case 'A':
+    //                 moves.add(CubeType.ANGLE);
+    //                 break;
+    //             case 'S':
+    //                 moves.add(CubeType.STRAIGHT);
+    //                 break;
             
-                default:
-                    break;
-            }
-        }
-    }
+    //             default:
+    //                 break;
+    //         }
+    //     }
+    // }
 
-    public List<Movement> getMoves() {
-        return moves;
-    }
+    // public List<CubeType> getMoves() {
+    //     return moves;
+    // }
 
     
 }
