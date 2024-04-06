@@ -5,7 +5,7 @@ import java.util.List;
 public class Configuration {
 
     private String input;
-    // private List<CubeType> moves = new ArrayList<>();
+    private List<CubeType> types = new ArrayList<>();
 
     Configuration(String[] args){
         if(args.length != 1){
@@ -14,8 +14,18 @@ public class Configuration {
         
         input = args[0];
         checkString();
-        // convertInput();
+        convertInput();
         
+    }
+
+    private void initialPos(){
+        for (int x = 0; x < Cube.getSize(); x++){
+            for (int y = 0; y < Cube.getSize(); y++){
+                for (int z = 0; z < Cube.getSize(); z++){
+                    Cube.addPos(new Coordinates(x, y, z));
+                }
+            }
+        }
     }
 
     private void checkString(){
@@ -24,6 +34,7 @@ public class Configuration {
         Cube.setSize((int)(n)); // set Cube size to n
         
         int count = 0;
+
         
         for(int i = 0; i < input.length(); i++){
             if(input.charAt(i) == 'E'){
@@ -31,34 +42,34 @@ public class Configuration {
             }
         }
 
-        if((!input.matches("^[EAS]+$")) || (count != 2 || input.charAt(0) != 'E' || input.charAt(input.length() - 1) != 'E') || Math.floor(n) != n){
+        if((!input.matches("^[EAS]+$")) || n > 1 && (count != 2 || input.charAt(0) != 'E' || input.charAt(input.length() - 1) != 'E') || Math.floor(n) != n){
             throw new IllegalArgumentException("Invalid input data");
         }
         
     }
-
-    // private void convertInput(){
-    //     for(int i = 0; i < input.length(); i++){
-    //         switch (input.charAt(i)) {
-    //             case 'E':
-    //                 moves.add(CubeType.ENDPOINT);
-    //                 break;
-    //             case 'A':
-    //                 moves.add(CubeType.ANGLE);
-    //                 break;
-    //             case 'S':
-    //                 moves.add(CubeType.STRAIGHT);
-    //                 break;
+    private void convertInput(){
+        for(int i = 0; i < input.length(); i++){
+            switch (input.charAt(i)) {
+                case 'E':
+                    types.add(CubeType.ENDPOINT);
+                    break;
+                case 'A':
+                    types.add(CubeType.ANGLE);
+                    break;
+                case 'S':
+                    types.add(CubeType.STRAIGHT);
+                    break;
             
-    //             default:
-    //                 break;
-    //         }
-    //     }
-    // }
+                default:
+                    break;
+            }
+        }
+    }
 
-    // public List<CubeType> getMoves() {
-    //     return moves;
-    // }
+    public List<CubeType> getTypes() {
+       
+        return types;
+    }
 
     
 }

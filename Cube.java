@@ -2,17 +2,44 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.lang.Math;
-import java.util.HashSet;
+import java.util.Random;
 
 
 public class Cube {
     private static int size; // final keyword? 
+    private static ArrayList<Coordinates> initialPos = new ArrayList<>();
 
-    
+    private ArrayList<Direction> possibleMoves = new ArrayList<>();
     private Direction direction;
     private Coordinates pos;
     private Cube previous;
     private CubeType type;
+
+    // public Cube(CubeType t, Cube p){
+    //     type = t;
+    //     previous = p;
+    //     if (previous == null){
+    //         pos = new Coordinates();
+    //     }
+    //     else {
+    //         possibleMoves = getPossibleMoves();
+    //         direction = possibleMoves.get(0);
+    //         pos = directionToPos();
+    //     }
+    // }
+
+    public Cube(CubeType t, Cube p){
+        type = t;
+        previous = p;
+        if (previous == null){
+            pos = new Coordinates();
+        }
+        else {
+            possibleMoves = getPossibleMoves();
+            direction = possibleMoves.get(0);
+            pos = directionToPos();
+        }
+    }
 
     public Cube(CubeType t, Coordinates c, Cube p){
         type = t;
@@ -23,20 +50,21 @@ public class Cube {
     public static int getSize(){
         return size;
     }
-    // public List<Coordinates> getVisited(){
-    //     return filledPositions;
-    // }
 
     public Coordinates getPos(){
         return pos;
     }
     public Cube getPrevious(){
         return previous;
-
     }
+
 
     public static void setSize(int n){
         size = n;
+    }
+
+    public static addPos(Coordinates c){
+        initialPos.add(c);
     }
 
     public boolean collide(int x, int y, int z){
@@ -49,25 +77,76 @@ public class Cube {
             || z >= size  || z < 0 ){
         
             return false;
-            }
-        
-        if (previous == null){
+        }
+    
+        if (previous == null && !collide(x, y, z)){
             return true;
         }
 
         if (collide(x, y, z)){
-            System.out.println("here\n");
-            // return true;
             return false;
         }
 
         return previous.isValid(x, y, z);
-        // return true;
     }   
 
+    public boolean moveOn(){
+        if (previous == null)
+            return false;
+        
+        while (!previous.isValid(pos.getX(), pos.getY(), pos.getZ())){
+            boolean removed = possibleMoves.remove(direction);
+            if (possibleMoves.size() == 0){
+                boolean existsSolution =  previous.nextSolution();
+                if (existsSolution){
+                    possibleMoves = getPossibleMoves();
+                }
+                else {
+                    return false;
+                }
+            }
+            Random random = new Random();
+            int randomIndex = random.nextInt(possibleMoves.size());
+            direction = possibleMoves.get(randomIndex);
+            pos = directionToPos();
+        }
 
-    public HashSet<Direction> getPossibleMoves(){
-        HashSet<Direction> possibleMoves = new HashSet<>();
+        return true;
+    }
+
+    public boolean findSolution(){
+        if (previous == null)
+            return true;
+        
+        if (!moveOn())
+            return false;
+        
+        return true;
+    }
+
+    public boolean nextSolution(){
+        if (previous == null){
+            return true;
+        }
+        boolean removed = possibleMoves.remove(direction);
+        if (possibleMoves.size() > 0){
+            Random random = new Random();
+            int randomIndex = random.nextInt(possibleMoves.size());
+            direction = possibleMoves.get(randomIndex);
+            pos = directionToPos();
+            return moveOn() && findSolution();
+        }
+                
+        if (previous.nextSolution()){
+            possibleMoves = getPossibleMoves();
+            return true;
+
+        }
+        return false;
+
+    }
+
+    public ArrayList<Direction> getPossibleMoves(){
         if (previous.type == CubeType.STRAIGHT){
             possibleMoves.add(previous.direction);
             }
@@ -113,76 +192,33 @@ public class Cube {
         return possibleMoves;
     }
 
-    public boolean moveOn(){
-        if (previous == null){
-            return false;
-        }
-        HashSet <Direction> possibleMoves = getPossibleMoves();
+ 
 
-        boolean removed = possibleMoves.remove(direction); // returns false if element does not exist
-        Coordinates nextMove = new Coordinates();
-        for (Direction move : possibleMoves) {
-            // System.out.println(move);
-            direction = move;
-            nextMove = directionToPos(nextMove);
-            // System.out.println("pos = " + pos.toString());
-            if (isValid(nextMove.getX(), nextMove.getY(), nextMove.getZ())){
-                pos = nextMove;
-                return true;
-            }
-            // return false;
-        }
-        return previous.moveOn();
-    }
-
-    public Coordinates directionToPos(Coordinates c){
+    public Coordinates directionToPos(){
+        Coordinates c = new Coordinates(previous.pos.getX(), previous.pos.getY(), previous.pos.getZ());
         switch (direction){
             case UP :
-                // System.out.print("UP : ");
-                c.setX(previous.pos.getX() - 1);
-                c.setY(previous.pos.getY());
-                c.setZ(previous.pos.getZ());
-                // pos.translate(1 , 0, 0);
+                c.translate(-1 , 0, 0);
                 break;
             
             case DOWN :
-            // System.out.print("DOWN : ");
-                c.setX(previous.pos.getX() + 1);
-                c.setY(previous.pos.getY());
-                c.setZ(previous.pos.getZ());
-                // pos.translate(-1, 0, 0);
+                c.translate(1, 0, 0);
                 break;    
 
             case LEFT :
-                // System.out.print("LEFT : ");
-                c.setX(previous.pos.getX());
-                c.setY(previous.pos.getY() - 1);
-                c.setZ(previous.pos.getZ());
-                // pos.translate(0, 1, 0);
+                c.translate(0, -1, 0);
                 break;
 
             case RIGHT :
-                // System.out.print("RIGHT : ");
-                c.setX(previous.pos.getX());
-                c.setY(previous.pos.getY() + 1);
-                c.setZ(previous.pos.getZ());
-                // pos.translate(0, -1, 0);
+                c.translate(0, 1, 0);
                 break;
 
             case BACK :
-                // System.out.print("BACK   : ");
-                c.setX(previous.pos.getX());
-                c.setY(previous.pos.getY());
-                c.setZ(previous.pos.getZ() - 1);
-                // pos.translate(0, 0, 1);
+                c.translate(0, 0, -1);
                 break;
 
             case FRONT :
-                // System.out.print("FRONT : ");
-                c.setX(previous.pos.getX());
-                c.setY(previous.pos.getY());
-                c.setZ(previous.pos.getZ() + 1);
-                // pos.translate(0, 0, -1);
+                c.translate(0, 0, 1);
                 break;
             
             default :
@@ -191,72 +227,98 @@ public class Cube {
         return c;
     }
 
-    // List<Coordinates> getPossibleMoves(){
-    //     int dx = 0, dy = 0, dz = 0;
-    //     List<Coordinates> possibleMoves = new ArrayList<>();
-    //     if (previous != null && previous.previous != null){
-    //         dx = previous.pos.getX() - previous.previous.pos.getX();
-    //         dy = previous.pos.getY() - previous.previous.pos.getY();
-    //         dz = previous.pos.getZ() - previous.previous.pos.getZ();
-    //     }
-
-    //     switch (previous.type){
-    //         case STRAIGHT :
-    //             possibleMoves.add(new Coordinates(pos.getX() + dx, pos.getY() + dy, pos.getZ() + dz));
-    //             break;
-            
-    //         case ANGLE : 
-    //             if (dx != 0){
-    //                 possibleMoves.add(new Coordinates(pos.getX(), pos.getY() + 1, pos.getZ())); // RIGHT
-    //                 possibleMoves.add(new Coordinates(pos.getX(), pos.getY() - 1, pos.getZ())); // LEFT
-    //                 possibleMoves.add(new Coordinates(pos.getX(), pos.getY(), pos.getZ() + 1)); // FRONT
-    //                 possibleMoves.add(new Coordinates(pos.getX(), pos.getY(), pos.getZ() - 1)); // BACK
-    //             }
-    //             else if (dy != 0){
-    //                 possibleMoves.add(new Coordinates(pos.getX() + 1, pos.getY(), pos.getZ())); // UP
-    //                 possibleMoves.add(new Coordinates(pos.getX() - 1, pos.getY(), pos.getZ())); // DOWN
-    //                 possibleMoves.add(new Coordinates(pos.getX(), pos.getY(), pos.getZ() + 1)); // FRONT
-    //                 possibleMoves.add(new Coordinates(pos.getX(), pos.getY(), pos.getZ() - 1)); // BACK
-    //             }
-
-    //             else if (dz != 0){
-    //                 possibleMoves.add(new Coordinates(pos.getX() + 1, pos.getY(), pos.getZ())); // UP
-    //                 possibleMoves.add(new Coordinates(pos.getX() - 1, pos.getY(), pos.getZ())); // DOWN
-    //                 possibleMoves.add(new Coordinates(pos.getX(), pos.getY() + 1, pos.getZ())); // RIGHT
-    //                 possibleMoves.add(new Coordinates(pos.getX(), pos.getY() - 1, pos.getZ())); // LEFT
-    //             }
-    //             break;
-
-    //         case ENDPOINT :
-    //             possibleMoves.add(new Coordinates(pos.getX() + 1, pos.getY(), pos.getZ()));
-    //             possibleMoves.add(new Coordinates(pos.getX() - 1, pos.getY(), pos.getZ()));
-    //             possibleMoves.add(new Coordinates(pos.getX(), pos.getY() + 1, pos.getZ()));
-    //             possibleMoves.add(new Coordinates(pos.getX(), pos.getY() - 1, pos.getZ()));
-    //             possibleMoves.add(new Coordinates(pos.getX(), pos.getY(), pos.getZ() + 1));
-    //             possibleMoves.add(new Coordinates(pos.getX(), pos.getY(), pos.getZ() - 1));
-    //             break;
-
-    //         default : 
-    //             break;
-    //     }
-
-    //     return possibleMoves;
-    // }
-
- 
-
-
-    public boolean findSolution(){
+    public void display(){
+        if (previous != null){
+            previous.display();
+        }
+        System.out.println(pos.toString());
         
-
-
-
-        return false;
-
     }
-
-
-
-   
-    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// public Coordinates directionToPos(){
+//     Coordinates c = new Coordinates();
+//     // c = previous.pos;
+//     c.setX(previous.pos.getX());
+//     c.setY(previous.pos.getY());
+//     c.setZ(previous.pos.getZ());
+//     switch (direction){
+//         case UP :
+//             // System.out.print("UP : ");
+//             // c.setX(previous.pos.getX() - 1);
+//             // c.setY(previous.pos.getY());
+//             // c.setZ(previous.pos.getZ());
+//             c.translate(-1 , 0, 0);
+//             break;
+        
+//         case DOWN :
+//         // System.out.print("DOWN : ");
+//             // c.setX(previous.pos.getX() + 1);
+//             // c.setY(previous.pos.getY());
+//             // c.setZ(previous.pos.getZ());
+//             c.translate(1, 0, 0);
+//             break;    
+
+//         case LEFT :
+//             // System.out.print("LEFT : ");
+//             // c.setX(previous.pos.getX());
+//             // c.setY(previous.pos.getY() - 1);
+//             // c.setZ(previous.pos.getZ());
+//             c.translate(0, -1, 0);
+//             break;
+
+//         case RIGHT :
+//             // System.out.print("RIGHT : ");
+//             // c.setX(previous.pos.getX());
+//             // c.setY(previous.pos.getY() + 1);
+//             // c.setZ(previous.pos.getZ());
+//             c.translate(0, 1, 0);
+//             break;
+
+//         case BACK :
+//             // System.out.print("BACK   : ");
+//             // c.setX(previous.pos.getX());
+//             // c.setY(previous.pos.getY());
+//             // c.setZ(previous.pos.getZ() - 1);
+//             c.translate(0, 0, -1);
+//             break;
+
+//         case FRONT :
+//             // System.out.print("FRONT : ");
+//             // c.setX(previous.pos.getX());
+//             // c.setY(previous.pos.getY());
+//             // c.setZ(previous.pos.getZ() + 1);
+//             c.translate(0, 0, 1);
+//             break;
+        
+//         default :
+//             break;
+//     }
+//     return c;
+// }
