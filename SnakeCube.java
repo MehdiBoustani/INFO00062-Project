@@ -1,6 +1,8 @@
 import java.util.List;
+import java.util.HashSet;
+import java.util.ArrayList;
 
-public class SnakeCube {
+public class SnakeCube {   
 
     public static void main(String[] args) throws Exception{
         Configuration snake = null;
@@ -21,9 +23,12 @@ public class SnakeCube {
                 System.out.println("No solution found\n");
                 return;
             }
-        }
+        }        
 
         c.display();
+        // TEST DUPLICATES
+        System.out.println("ArrayList contains duplicates: " + Cube.containsDuplicates());
+
 
                 
     }

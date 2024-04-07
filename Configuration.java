@@ -14,18 +14,7 @@ public class Configuration {
         
         input = args[0];
         checkString();
-        convertInput();
-        
-    }
-
-    private void initialPos(){
-        for (int x = 0; x < Cube.getSize(); x++){
-            for (int y = 0; y < Cube.getSize(); y++){
-                for (int z = 0; z < Cube.getSize(); z++){
-                    Cube.addPos(new Coordinates(x, y, z));
-                }
-            }
-        }
+        convertInput();        
     }
 
     private void checkString(){
@@ -35,7 +24,6 @@ public class Configuration {
         
         int count = 0;
 
-        
         for(int i = 0; i < input.length(); i++){
             if(input.charAt(i) == 'E'){
                 count++;
@@ -45,8 +33,8 @@ public class Configuration {
         if((!input.matches("^[EAS]+$")) || n > 1 && (count != 2 || input.charAt(0) != 'E' || input.charAt(input.length() - 1) != 'E') || Math.floor(n) != n){
             throw new IllegalArgumentException("Invalid input data");
         }
-        
     }
+
     private void convertInput(){
         for(int i = 0; i < input.length(); i++){
             switch (input.charAt(i)) {
