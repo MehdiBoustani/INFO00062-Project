@@ -21,6 +21,10 @@ public class Configuration {
 
         double n = Math.cbrt(input.length());
         Cube.setSize((int)(n)); // set Cube size to n
+
+        if (Cube.getSize() == 1 && input.charAt(0) != 'E'){
+            throw new IllegalArgumentException("Invalid input data");
+        }
         
         int count = 0;
 
