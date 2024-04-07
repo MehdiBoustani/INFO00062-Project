@@ -1,4 +1,4 @@
-public enum Direction {
+public enum Move {
     UP,     // x + 1
     DOWN,   // x - 1
 
