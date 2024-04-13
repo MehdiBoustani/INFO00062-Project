@@ -12,41 +12,30 @@ public class Coordinates
 {
     private int x, y, z;
     
-    public Coordinates()
-    {
+    public Coordinates(){
         x = 1;
         y = 1;
         z = 1;
     }
     
-    public Coordinates(int x, int y, int z)
-    {
+    public Coordinates(int x, int y, int z){
         this.x = x;
         this.y = y;
         this.z = z;
     }
     
-    public int getX() { return x; }
-    public int getY() { return y; }
-    public int getZ() { return z; }
+    public int getX(){ return x; }
+    public int getY(){ return y; }
+    public int getZ(){ return z; }
     
-    public void translate(int dx, int dy, int dz)
-    {
+    public void translate(int dx, int dy, int dz){
         x += dx;
         y += dy;
         z += dz;
     }
-
-    // ------------------------------------- FOR TESTS --------------------------------- //
-    // Checks if 2 points are equal
-    public boolean isEqual(Coordinates c){
-        return x == c.x && y == c.y && z == c.z;
-    }
-    // ------------------------------------- FOR TESTS --------------------------------- //
-
     
-    public String toString()
-    {
+    public String toString(){
+
         return "(" + x + "," + y + "," + z + ")";
     }
 }

@@ -1,36 +1,29 @@
-import java.util.List;
-import java.util.HashSet;
-import java.util.ArrayList;
+/*
+ * INFO0062 - Object-Oriented Programming
+ * Programming Project -- Academic Year 2023-2024
+ *
+ * This SnakeSube class serves as the entry point to solve the snake cube puzzle. 
+ * It initializes the puzzle configuration and invokes the solver.
+ * 
+ * @author: ALBASHITYALSHAIER Abdelkader & BOUSTANI Mehdi 
+ * @date : 14/04/2024
+ */
 
 public class SnakeCube {   
-
     public static void main(String[] args) throws Exception{
+
         Configuration snake = null;
-        try {
+        
+        try{
             snake = new Configuration(args);
-        } catch (IllegalArgumentException e) {
+
+        }catch (IllegalArgumentException e){
+
             System.err.println(e.getMessage());
+
             return;
         }
 
-        Cube c = null;
-        List<CubeType> types = snake.getTypes();
-
-        for (int i = 0; i < types.size(); i++){
-            c = new Cube(types.get(i), c);
-           
-            if (!c.findSolution()){
-                System.out.println("No solution found\n");
-                return;
-            }
-        }        
-
-        c.display();
-        // TEST DUPLICATES
-        System.out.println("ArrayList contains duplicates: " + Cube.containsDuplicates());
-
-
-                
+        Cube.solvePuzzle(snake); 
     }
-
 }
