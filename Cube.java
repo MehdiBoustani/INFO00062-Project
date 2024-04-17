@@ -357,7 +357,7 @@ public class Cube {
             c = new Cube(types.get(i), c);
            
             if (!c.findSolution()){
-                System.out.println("No solution found\n");
+                System.out.println("No solution");
                 return;
             }
         }

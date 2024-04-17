@@ -1,6 +1,7 @@
 /*
  * INFO0062 - Object-Oriented Programming
- * Code adopted from Exercise series 3
+ * 
+ *  ----------------- THIS CLASS IS ADOPTED FROM EXERCISE SERIES 3 -------------------
  *
  * This Coordinates class involved in all exercises of this series and isn't supposed to be 
  * edited.
